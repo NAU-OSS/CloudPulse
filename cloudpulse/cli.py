@@ -2,6 +2,19 @@
 
 import argparse
 
+
+def positive_float(value):
+    try:
+        number = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("timeout must be a number") from exc
+
+    if number <= 0:
+        raise argparse.ArgumentTypeError("timeout must be greater than zero")
+
+    return number
+
+
 from cloudpulse.monitor import check_service
 from cloudpulse.reporter import format_result
 
@@ -20,7 +33,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "--timeout",
-        type=float,
+        type=positive_float,
         default=5.0,
         help="Request timeout in seconds (default: 5).",
     )

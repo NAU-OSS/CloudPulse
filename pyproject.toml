@@ -18,3 +18,9 @@ cloudpulse = "cloudpulse.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["cloudpulse*"]
+
+
+[project.urls]
+Homepage = "https://github.com/NAU-OSS/CloudPulse"
+Repository = "https://github.com/NAU-OSS/CloudPulse"
+Issues = "https://github.com/NAU-OSS/CloudPulse/issues"
