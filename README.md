@@ -1,5 +1,7 @@
 # CloudPulse
 
+[![CloudPulse CI](https://github.com/NAU-OSS/CloudPulse/actions/workflows/ci.yml/badge.svg)](https://github.com/NAU-OSS/CloudPulse/actions/workflows/ci.yml)
+
 > A lightweight, open-source command-line tool for checking website and API health, response latency, and availability.
 
 CloudPulse gives developers and system administrators a fast way to inspect the health of multiple HTTP/HTTPS services directly from a terminal.
