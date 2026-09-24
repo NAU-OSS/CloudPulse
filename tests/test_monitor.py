@@ -22,3 +22,24 @@ class TestHealthClassification(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestCLIValidation(unittest.TestCase):
+
+    def test_timeout_must_be_positive(self):
+        from cloudpulse.cli import build_parser
+
+        parser = build_parser()
+
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["https://example.com", "--timeout", "0"])
+
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["https://example.com", "--timeout", "-1"])
+
+    def test_positive_timeout_is_accepted(self):
+        from cloudpulse.cli import build_parser
+
+        parser = build_parser()
+        args = parser.parse_args(["https://example.com", "--timeout", "2.5"])
+
+        self.assertEqual(args.timeout, 2.5)
