@@ -113,4 +113,15 @@ CloudPulse was started by Paul Revanth Madasu within the Northern Arizona Univer
 
 ## License
 
-CloudPulse will be distributed under the MIT License.
+CloudPulse is distributed under the MIT License. See [LICENSE](LICENSE) for details.
+
+
+## Community and Project Documents
+
+- [Contributing Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Support](SUPPORT.md)
+- [Roadmap](ROADMAP.md)
+- [Governance](GOVERNANCE.md)
+- [License](LICENSE)
