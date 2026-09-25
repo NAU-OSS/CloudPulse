@@ -15,7 +15,19 @@ def positive_float(value):
     return number
 
 
-from cloudpulse.monitor import check_service
+def positive_latency_threshold(value):
+    try:
+        number = float(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("latency threshold must be a number") from exc
+
+    if number <= 0:
+        raise argparse.ArgumentTypeError("latency threshold must be greater than zero")
+
+    return number
+
+
+from cloudpulse.monitor import DEFAULT_LATENCY_THRESHOLD_MS, check_service
 from cloudpulse.reporter import format_result
 
 
@@ -38,6 +50,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Request timeout in seconds (default: 5).",
     )
 
+    parser.add_argument(
+        "--latency-threshold",
+        type=positive_latency_threshold,
+        default=DEFAULT_LATENCY_THRESHOLD_MS,
+        help=f"Degraded latency threshold in milliseconds (default: {int(DEFAULT_LATENCY_THRESHOLD_MS)}).",
+    )
+
     return parser
 
 
@@ -53,7 +72,11 @@ def main() -> None:
     down = 0
 
     for url in args.urls:
-        result = check_service(url, timeout=args.timeout)
+        result = check_service(
+            url,
+            timeout=args.timeout,
+            latency_threshold=args.latency_threshold,
+        )
         print(format_result(result))
 
         if result.status == "HEALTHY":
