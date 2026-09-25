@@ -17,19 +17,30 @@ class HealthResult:
     error: str | None = None
 
 
-def classify_health(status_code: int, latency_ms: float) -> str:
+DEFAULT_LATENCY_THRESHOLD_MS: float = 1000.0
+
+
+def classify_health(
+    status_code: int,
+    latency_ms: float,
+    latency_threshold: float = DEFAULT_LATENCY_THRESHOLD_MS,
+) -> str:
     """Classify a service as healthy, degraded, or down."""
 
     if status_code >= 500:
         return "DOWN"
 
-    if status_code >= 400 or latency_ms >= 1000:
+    if status_code >= 400 or latency_ms >= latency_threshold:
         return "DEGRADED"
 
     return "HEALTHY"
 
 
-def check_service(url: str, timeout: float = 5.0) -> HealthResult:
+def check_service(
+    url: str,
+    timeout: float = 5.0,
+    latency_threshold: float = DEFAULT_LATENCY_THRESHOLD_MS,
+) -> HealthResult:
     """Check one HTTP/HTTPS service and measure its response time."""
 
     if not url.startswith(("http://", "https://")):
@@ -52,7 +63,9 @@ def check_service(url: str, timeout: float = 5.0) -> HealthResult:
                 url=url,
                 status_code=status_code,
                 latency_ms=latency_ms,
-                status=classify_health(status_code, latency_ms),
+                status=classify_health(
+                    status_code, latency_ms, latency_threshold=latency_threshold
+                ),
             )
 
     except HTTPError as exc:
@@ -62,7 +75,9 @@ def check_service(url: str, timeout: float = 5.0) -> HealthResult:
             url=url,
             status_code=exc.code,
             latency_ms=latency_ms,
-            status=classify_health(exc.code, latency_ms),
+            status=classify_health(
+                exc.code, latency_ms, latency_threshold=latency_threshold
+            ),
             error=str(exc),
         )
 

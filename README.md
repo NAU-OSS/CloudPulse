@@ -28,11 +28,11 @@ It currently reports:
 
 CloudPulse currently uses three states:
 
-- `HEALTHY`: HTTP status below 400 and latency below 1000 ms.
-- `DEGRADED`: HTTP 4xx response or latency of at least 1000 ms.
+- `HEALTHY`: HTTP status below 400 and latency below the degraded threshold (default: 1000 ms).
+- `DEGRADED`: HTTP 4xx response or latency of at least the degraded threshold (default: 1000 ms).
 - `DOWN`: HTTP 5xx response, timeout, connection failure, or similar network failure.
 
-These thresholds are intentionally simple in the first release and may become configurable in future versions.
+The degraded latency threshold is configurable via the `--latency-threshold` flag.
 
 ## Requirements
 
@@ -59,6 +59,10 @@ Check several endpoints together:
 Change the network timeout:
 
     python3 -m cloudpulse https://example.com --timeout 2
+
+Change the degraded latency threshold (in milliseconds):
+
+    python3 -m cloudpulse https://example.com --latency-threshold 750
 
 ## Running Tests
 

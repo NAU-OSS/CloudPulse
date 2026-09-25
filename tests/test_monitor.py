@@ -19,9 +19,19 @@ class TestHealthClassification(unittest.TestCase):
     def test_server_error_is_down(self):
         self.assertEqual(classify_health(503, 100), "DOWN")
 
+    def test_custom_latency_threshold_healthy(self):
+        self.assertEqual(classify_health(200, 400, latency_threshold=500), "HEALTHY")
 
-if __name__ == "__main__":
-    unittest.main()
+    def test_custom_latency_threshold_degraded_when_meeting_threshold(self):
+        self.assertEqual(classify_health(200, 500, latency_threshold=500), "DEGRADED")
+
+    def test_custom_latency_threshold_degraded_when_exceeding_threshold(self):
+        self.assertEqual(classify_health(200, 600, latency_threshold=500), "DEGRADED")
+
+    def test_custom_latency_threshold_preserves_error_status(self):
+        self.assertEqual(classify_health(500, 50, latency_threshold=500), "DOWN")
+        self.assertEqual(classify_health(404, 50, latency_threshold=500), "DEGRADED")
+
 
 class TestCLIValidation(unittest.TestCase):
 
@@ -43,3 +53,42 @@ class TestCLIValidation(unittest.TestCase):
         args = parser.parse_args(["https://example.com", "--timeout", "2.5"])
 
         self.assertEqual(args.timeout, 2.5)
+
+    def test_latency_threshold_must_be_positive(self):
+        from cloudpulse.cli import build_parser
+
+        parser = build_parser()
+
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["https://example.com", "--latency-threshold", "0"])
+
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["https://example.com", "--latency-threshold", "-10"])
+
+    def test_latency_threshold_must_be_number(self):
+        from cloudpulse.cli import build_parser
+
+        parser = build_parser()
+
+        with self.assertRaises(SystemExit):
+            parser.parse_args(["https://example.com", "--latency-threshold", "fast"])
+
+    def test_positive_latency_threshold_is_accepted(self):
+        from cloudpulse.cli import build_parser
+
+        parser = build_parser()
+        args = parser.parse_args(["https://example.com", "--latency-threshold", "750"])
+
+        self.assertEqual(args.latency_threshold, 750.0)
+
+    def test_default_latency_threshold(self):
+        from cloudpulse.cli import build_parser
+
+        parser = build_parser()
+        args = parser.parse_args(["https://example.com"])
+
+        self.assertEqual(args.latency_threshold, 1000.0)
+
+
+if __name__ == "__main__":
+    unittest.main()
