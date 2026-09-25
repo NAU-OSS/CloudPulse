@@ -165,3 +165,35 @@ Security reporting instructions are documented in `SECURITY.md`.
 If you are unsure whether an idea belongs in CloudPulse, open a GitHub issue and start a discussion.
 
 Contributing to an open-source project includes more than writing code. Thoughtful questions, documentation improvements, testing, issue reports, and reviews are all valuable contributions.
+
+## Code Style and Formatting
+
+CloudPulse is written in Python and aims to keep the codebase simple and readable.
+
+When contributing code:
+
+- follow standard Python conventions and PEP 8 where practical
+- use four spaces for indentation
+- choose clear and descriptive names for functions, variables, and modules
+- keep functions focused on a single responsibility
+- avoid unnecessary dependencies and complexity
+- add comments when they explain reasoning that is not obvious from the code
+- keep changes focused on the issue or feature being addressed
+- preserve compatibility with the Python versions tested by the project
+
+Before submitting a pull request, contributors should run the complete test suite and verify that the command-line interface still works as expected.
+
+## Documentation Standards
+
+Documentation is considered an important part of CloudPulse.
+
+Contributors should:
+
+- update the README when user-facing behavior, installation, or usage changes
+- document new command-line options and provide examples when appropriate
+- keep documentation clear, concise, and consistent with the actual behavior of the project
+- update tests and related documentation when behavior changes
+- use Markdown for project documentation
+- link to related issues or pull requests when useful for understanding a change
+
+Documentation-only contributions are welcome and should follow the same review process as code changes.
